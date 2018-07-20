@@ -36,8 +36,8 @@ def worker():
 def process_spot_btc_usdt_depth(data):
     raw_asks = data['asks']
     raw_bids = data['bids']
-    recv_asks = [ [Decimal(pair[0[),Decimal(pair[1[)] for pair in raw_asks]
-    recv_bids = [ [Decimal(pair[0[),Decimal(pair[1[)] for pair in raw_bids]
+    recv_asks = [[Decimal(pair[0]),Decimal(pair[1])] for pair in raw_asks]
+    recv_bids = [[Decimal(pair[0]),Decimal(pair[1])] for pair in raw_bids]
     recv_bids.reverse() 
     if spot_btc_usdt_depth is None:
         #未初始化
