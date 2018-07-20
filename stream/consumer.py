@@ -38,7 +38,7 @@ def worker():
 		recv_timestamp = payload['recv_timestamp']
 		send_timestamp = payload['send_timestamp']
 		diff = recv_timestamp - send_timestamp
-		print(channel + '_' + sub_type + ' 延时 ' + str(diff.total_seconds() * 1000) + 'ms')
+		print(channel + '_' + sub_type + ' delay ' + str(diff.total_seconds() * 1000) + 'ms')
 		if channel in store:
 			store[channel][sub_type] = payload
 		else:
