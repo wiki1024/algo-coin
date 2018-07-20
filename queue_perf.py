@@ -2,15 +2,17 @@ import threading
 import queue
 import gc
 from datetime import datetime
+from multiprocessing import Pipe
 
 q = queue.Queue(1000)
-
+a, b = Pipe()
 evt = threading.Event()
 
 
 def msg_handler(expected):
 	while expected != 0:
-		msg = q.get()
+		# msg = q.get()
+		msg = b.recv()
 		expected = expected - 1
 	evt.set()
 
@@ -24,6 +26,6 @@ if __name__ == '__main__':
 		t.start()
 		ss = datetime.now()
 		for j in range(numOfIter):
-			q.put(j)
+			a.send(j)
 		evt.wait()
 		print(numOfIter * 1.0 / (datetime.now() - ss).total_seconds())
