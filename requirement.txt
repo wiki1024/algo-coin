@@ -1,2 +1,3 @@
+gevent
 autobahn
 twisted[tls]
