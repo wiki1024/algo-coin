@@ -47,8 +47,9 @@ def worker():
 			if store['spot']['ticker'] is not None and store['spot']['depth'] is not None and store[channel]['ticker'] is not None and store[channel]['depth'] is not None:
 				try:
 					callbacks[channel](store['spot']['ticker']['data'], store['spot']['depth']['data'], store[channel]['ticker']['data'], store[channel]['depth']['data'])
-				except:
+				except Exception as ex:
 					print('callback exception')
+					print(ex)
 
 
 def run():
