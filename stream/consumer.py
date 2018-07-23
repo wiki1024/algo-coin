@@ -45,7 +45,10 @@ def worker():
 			print('unknown channel ' + channel)
 		if channel in callbacks and callbacks[channel] is not None:
 			if store['spot']['ticker'] is not None and store['spot']['depth'] is not None and store[channel]['ticker'] is not None and store[channel]['depth'] is not None:
-				callbacks[channel](store['spot']['ticker']['data'], store['spot']['depth']['data'], store[channel]['ticker']['data'], store[channel]['depth']['data'])
+				try:
+					callbacks[channel](store['spot']['ticker']['data'], store['spot']['depth']['data'], store[channel]['ticker']['data'], store[channel]['depth']['data'])
+				except:
+					print('callback exception')
 
 
 def run():
