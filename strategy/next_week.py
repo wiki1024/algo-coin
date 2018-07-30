@@ -1,5 +1,5 @@
 import strategy.okex as okex
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from termcolor import colored
 
@@ -11,7 +11,9 @@ constants = {'spot_commission_rate': Decimal(0.00045),
 
 
 def calculate_expire_date():
-	today = datetime.today()
+	# today = datetime.today()
+	utc_now = datetime.utcnow().replace(tzinfo=timezone.utc)
+	today = utc_now.astimezone(timezone(timedelta(hours=8)))
 	this_sunday = today + timedelta(6 - today.weekday())
 	next_friday = this_sunday + timedelta(5)
 	next_friday = next_friday.replace(hour=16,
