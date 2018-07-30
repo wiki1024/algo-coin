@@ -11,12 +11,11 @@ constants = {'spot_commission_rate': Decimal(0.00045),
 
 
 def calculate_expire_date():
-	# today = datetime.today()
-	utc_now = datetime.utcnow().replace(tzinfo=timezone.utc)
-	today = utc_now.astimezone(timezone(timedelta(hours=8)))
+	today = datetime.utcnow()
+
 	this_sunday = today + timedelta(6 - today.weekday())
 	next_friday = this_sunday + timedelta(5)
-	next_friday = next_friday.replace(hour=16,
+	next_friday = next_friday.replace(hour=8,
 	                                  minute=0,
 	                                  second=0,
 	                                  microsecond=0)
