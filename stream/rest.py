@@ -12,7 +12,7 @@ from stream import stream
 def task(channel, url, converter):
 	import logging
 
-	logging.basicConfig(level=logging.DEBUG)
+	# logging.basicConfig(level=logging.DEBUG)
 	while True:
 		try:
 			send_timestamp = datetime.now()
