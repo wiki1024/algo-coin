@@ -1,6 +1,7 @@
 import strategy.okex as okex
 from datetime import datetime, timedelta
 from decimal import Decimal
+from termcolor import colored
 
 constants = {'spot_commission_rate': Decimal(0.00045),
              'future_commission_rate': Decimal(0.00045),
@@ -26,31 +27,34 @@ def calculate_interest_days(expire_date):
 	return interest_hours // 24 + 1
 
 
-def calculate_signals(spot_ticker, spot_depth, future_ticker, future_depth):
-	spot_buy_price = spot_ticker['buy']
-	spot_sell_price = spot_ticker['sell']
-	future_buy_price = future_ticker['buy']
-	future_sell_price = future_ticker['sell']
-
-	if spot_sell_price > future_buy_price:
-		signal = long_future_short_spot(spot_sell_price, future_buy_price)
-		# print('signal long')
-		print(signal)
-	elif spot_buy_price < future_sell_price:
-		# print('signal short')
-		signal = short_future_long_spot(spot_buy_price, future_sell_price)
-		print(signal)
-	else:
-		return
-
-
 def calculate_annulized_return_rate(profit, cost, days):
 	daily_interest = (profit / cost + 1) ** (1 / Decimal(days)) - 1
 	return (1 + daily_interest) ** 365
 
 
+def get_calculate_signals_func(calc_exp_date, channel, color):
+
+	def calculate_signals(spot_ticker, spot_depth, future_ticker, future_depth):
+		spot_buy_price = spot_ticker['buy']
+		spot_sell_price = spot_ticker['sell']
+		future_buy_price = future_ticker['buy']
+		future_sell_price = future_ticker['sell']
+
+		if spot_sell_price > future_buy_price:
+			signal = long_future_short_spot(spot_sell_price, future_buy_price, calc_exp_date)
+			print(colored(channel + ' Long Future Short Spot',color))
+			print(signal)
+		elif spot_buy_price < future_sell_price:
+			print(colored(channel + ' Short Future Long Spot', color))
+			signal = short_future_long_spot(spot_buy_price, future_sell_price, calc_exp_date)
+			print(signal)
+		else:
+			return
+	return calculate_signals
+
+
 # long future while short spot
-def long_future_short_spot(spot_price, future_price):
+def long_future_short_spot(spot_price, future_price, calc_exp_date_func):
 	future_leverage = constants['future_leverage']
 	spot_leverage = constants['spot_leverage']
 	future_commission_rate = constants['future_commission_rate']
@@ -62,7 +66,7 @@ def long_future_short_spot(spot_price, future_price):
 	future_commission = okex.commission(future_price, 1, future_commission_rate)
 
 	# Calculate number of days until future expire
-	expire_date = calculate_expire_date()
+	expire_date = calc_exp_date_func()
 	interest_days = calculate_interest_days(expire_date)
 
 	# Calculate spot margin and commission and interest paid
@@ -87,7 +91,7 @@ def long_future_short_spot(spot_price, future_price):
 	        'Annualized Return': return_rate}
 
 
-def short_future_long_spot(spot_price, future_price):
+def short_future_long_spot(spot_price, future_price, calc_exp_date_func):
 	future_leverage = constants['future_leverage']
 	spot_leverage = constants['spot_leverage']
 	future_commission_rate = constants['future_commission_rate']
@@ -99,7 +103,7 @@ def short_future_long_spot(spot_price, future_price):
 	future_commission = okex.commission(future_price, 1, future_commission_rate)
 
 	# Calculate number of days until future expire
-	expire_date = calculate_expire_date()
+	expire_date = calc_exp_date_func()
 	interest_days = calculate_interest_days(expire_date)
 
 	# Calculate spot long margin and commission and interest paid

@@ -1,4 +1,3 @@
 gevent
 requests
-autobahn
-twisted[tls]
+termcolor

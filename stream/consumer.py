@@ -1,4 +1,5 @@
 import threading
+from datetime import datetime
 
 from strategy import this_week
 from strategy import next_week
@@ -25,9 +26,9 @@ store = {
 }
 
 callbacks = {
-	'this_week': this_week.calculate_signals,
-	'next_week': next_week.calculate_signals,
-	'quarter': quarter.calculate_signals
+	'this_week': next_week.get_calculate_signals_func(this_week.calculate_expire_date, 'This Week', 'green'),
+	'next_week': next_week.get_calculate_signals_func(next_week.calculate_expire_date, 'Next Week','cyan'),
+	'quarter': None
 }
 
 
