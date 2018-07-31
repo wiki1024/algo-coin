@@ -10,8 +10,9 @@ constants = {'spot_commission_rate': Decimal(0.00045),
              'future_leverage': Decimal(10)}
 
 
-def calculate_expire_date():
-	today = datetime.utcnow()
+def calculate_expire_date(today=None):
+	if today is None:
+		today = datetime.utcnow()
 
 	this_sunday = today + timedelta(6 - today.weekday())
 	next_friday = this_sunday + timedelta(5)
@@ -30,11 +31,10 @@ def calculate_interest_days(expire_date):
 
 def calculate_annulized_return_rate(profit, cost, days):
 	daily_interest = (profit / cost + 1) ** (1 / Decimal(days)) - 1
-	return (1 + daily_interest) ** 365
+	return (1 + daily_interest) ** 365 - 1
 
 
 def get_calculate_signals_func(calc_exp_date, channel, color):
-
 	def calculate_signals(spot_ticker, spot_depth, future_ticker, future_depth):
 		spot_buy_price = spot_ticker['buy']
 		spot_sell_price = spot_ticker['sell']
@@ -43,7 +43,7 @@ def get_calculate_signals_func(calc_exp_date, channel, color):
 
 		if spot_sell_price > future_buy_price:
 			signal = long_future_short_spot(spot_sell_price, future_buy_price, calc_exp_date)
-			print(colored(channel + ' Long Future Short Spot',color))
+			print(colored(channel + ' Long Future Short Spot', color))
 			print(signal)
 		elif spot_buy_price < future_sell_price:
 			print(colored(channel + ' Short Future Long Spot', color))
@@ -51,6 +51,7 @@ def get_calculate_signals_func(calc_exp_date, channel, color):
 			print(signal)
 		else:
 			return
+
 	return calculate_signals
 
 

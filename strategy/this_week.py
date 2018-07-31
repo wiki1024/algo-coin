@@ -1,8 +1,9 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 
 
-def calculate_expire_date():
-	today = datetime.utcnow()
+def calculate_expire_date(today=None):
+	if today is None:
+		today = datetime.utcnow()
 
 	weekday_now = today.weekday()
 

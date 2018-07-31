@@ -27,8 +27,8 @@ store = {
 
 callbacks = {
 	'this_week': next_week.get_calculate_signals_func(this_week.calculate_expire_date, 'This Week', 'white'),
-	'next_week': next_week.get_calculate_signals_func(next_week.calculate_expire_date, 'Next Week','cyan'),
-	'quarter': None
+	'next_week': next_week.get_calculate_signals_func(next_week.calculate_expire_date, 'Next Week', 'cyan'),
+	'quarter': next_week.get_calculate_signals_func(quarter.calculate_expire_date, 'quarter', 'magenta')
 }
 
 
